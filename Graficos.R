@@ -1,3 +1,4 @@
+# This script is the continuation of the Alpha 
 library(gstat)
 library(writexl)
 library(readxl)
@@ -7,6 +8,7 @@ library(clhs)
 library(tidyverse)
 library(ggplot2)
 
+# creation of the data frame
 dattt = data_frame(id = data3$id,a = alp$alfa,F_vT =data$F_vT,
                    F_vB =data$F_vB ,IM = data2$IMorant , Num = data3$Num, ot =alp$OT)
 
@@ -16,6 +18,7 @@ colll2 = ifelse(dattt$a >= 0.01,"> 0.01", ifelse( dattt$a <= -0.01 ,
                                                   "<    -0.01","[-0.01,0.01]"))
 dattt$colll2 = colll2
 
+# calculation of variables
 f_t = qf(p = 0.05,2 ,56, lower.tail = F)
 seq(from=0.1,to= 4,length.out=1000)-> fp_tab
 pf = NULL
@@ -38,6 +41,9 @@ pf$prob2=as.numeric(pf$prob2)
 ph$prob= pf(fp_tab,2,56)
 ph$id=fp_tab
 
+
+# Quadrant scatter plot
+
 dattt |> 
   filter(id %in% c("iter_0","iter_12","iter_24","iter_36",
                    "iter_48","iter_60")) |> 
@@ -59,7 +65,9 @@ dattt |>
           Ai = c(A-Ad),
           Bi = c(A-Ad),
           Ci = c(C-Cd),
-          Di = c(D-Dd)) -> t2
+          Di = c(D-Dd))
+
+# alpha scatter plot
 dattt |> 
   filter(id %in% c("iter_0","iter_12","iter_24","iter_36",
                    "iter_48","iter_60")) |> 
@@ -72,8 +80,9 @@ dattt |>
   theme(axis.text = element_text(size=13),axis.title =element_text(size=18), 
         legend.title =element_text(size=18),
         legend.text =element_text(size=18))+
-  scale_color_manual(values=c("black","grey"))->p11
+  scale_color_manual(values=c("black","grey"))
 
+#  OT scatter plot
 dattt |> 
   filter(id %in% c("iter_0","iter_12","iter_24","iter_36",
                    "iter_48","iter_60")) |> 
@@ -100,7 +109,9 @@ dattt |>
   annotate('text', label='C', 
            x=3.7, y=10, hjust=0.5, vjust=0, size=8, color='black')+
   annotate('text', label='D', 
-           x=3.6, y=1, hjust=0.5, vjust=0, size=8, color="black") -> f21
+           x=3.6, y=1, hjust=0.5, vjust=0, size=8, color="black") 
+
+# Chart F tabulated at iteration 60
 dattt |> 
   filter(id %in% c("iter_60")) |> 
   ggplot(aes(x = F_vT)) +
@@ -115,8 +126,9 @@ dattt |>
         legend.title =element_text(size=18),
         legend.text =element_text(size=18))+
   scale_linetype_manual(name = "", values = c(2,1), 
-                        guide = guide_legend(override.aes = list(color = c( "black","black"))))-> f5.1
+                        guide = guide_legend(override.aes = list(color = c( "black","black"))))
 
+# Scatter plot of iteration (60,30,0)    P value         
 dattt |> 
   filter(id %in% c("iter_0",
                    "iter_30","iter_60")) |> 
@@ -133,30 +145,30 @@ dattt |>
         legend.title =element_text(size=18),
         legend.text =element_text(size=18))+
   
-  geom_abline(intercept = 0, slope = 1, color = "black",linetype = 2)-> f6.1
+  geom_abline(intercept = 0, slope = 1, color = "black",linetype = 2
 
+
+# Scatter plot of iteration (60,30,0)                
 dattt |> 
   filter(id %in% c("iter_0","iter_30",
                    "iter_60")) |> 
   ggplot( aes(y=y,x=x, color = colll2) )+
   geom_point() +
   labs(x = "P(whitout overlap)", y = "P(whit overlap)")+
-  theme_minimal()+
+   theme_minimal()+
   facet_wrap(~Num)+
-  scale_fill_hue(labels = c("p value >5%", "p value <5%"))+
-  labs(color=expression(alpha[~"S"] ^ "^"))+
-  coord_equal(xlim = c(0,1),ylim = c(0,1))+
-  scale_color_manual(values = c("grey","white","black") )+
-  theme(axis.text = element_text(size=13),axis.title =element_text(size=18), 
-        legend.title =element_text(size=18),
-        legend.text =element_text(size=18))+
-  
-  geom_abline(intercept = 0, slope = 1, color = "black",linetype= 2)-> f8 
-
+  scale_fill_hue(labels = c("> 0", " 0","< 0"))+
+    labs(color= "Coefficient
+of overlap")+
+ coord_equal(xlim = c(0,1),ylim = c(0,1))+
+  scale_color_manual(values = c("white","black","grey") )+
+  geom_abline(intercept = 0, slope = 1, color = "black",linetype= 2)
+                
+# Scatter plot of iteration (60,30,0) Alpha
 dattt |> 
   filter(id %in% c("iter_0",
                    "iter_30","iter_60")) |> 
-  ggplot( aes(y=y,x=x, color= colll) )+
+  ggplot( aes(y=y,x=x, color= a) )+
   geom_point(pch =20) +
   labs(x =  "P(without overlap)", y = "P(with overlap)",cex = 2)+
   theme_minimal()+
@@ -168,5 +180,4 @@ dattt |>
   theme(axis.text = element_text(size=13),axis.title =element_text(size=18), 
         legend.title =element_text(size=18),
         legend.text =element_text(size=18))+
-  
-  geom_abline(intercept = 0, slope = 1, color = "black",linetype = 2)-> f6.1
+  geom_abline(intercept = 0, slope = 1, color = "black",linetype = 2)

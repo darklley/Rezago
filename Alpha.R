@@ -1,3 +1,5 @@
+# This script is the continuation of the scripts presented on github https://github.com/CarlosRivera1212/rezago_aov
+
 library(gstat)
 library(writexl)
 library(readxl)
@@ -5,13 +7,16 @@ library(reshape2)
 library(ape)
 library(clhs)
 library(tidyverse)
-Tesis <- read_excel( "/Users/paula/Desktop/stiven pasantia/Tesis/Datos.xlsx")
+# Import data
+Tesis <- read_excel( "Datos.xlsx")
 Tesis$trt = as.factor(Tesis$trt)
 Tesis$blq = as.factor(Tesis$blq)
 Tesis$.id = as.factor(Tesis$.id)
-zm=read_rds("/Users/paula/Desktop/stiven pasantia/Tesis/Z_matrix.rds")
-xm=read_rds("/Users/paula/Desktop/stiven pasantia/Tesis/X_matrix.rds")
-alp=read_rds("/Users/paula/Desktop/stiven pasantia/Tesis/alfas.rds")
+zm=read_rds("Z_matrix.rds")
+xm=read_rds("X_matrix.rds")
+alp=read_rds("alfas.rds")
+
+# Anova of the simulations and extraction of p and f values
 
 data = NULL
 for (i in 1:length(unique(Tesis$.id))) {
@@ -28,6 +33,8 @@ for (i in 1:length(unique(Tesis$.id))) {
     data = rbind.data.frame(data,datax)
   }
 }
+
+# Generate matrix
 
 generar_matrices <- function(datos, n) {
   num_filas <- nrow(datos)
@@ -60,6 +67,9 @@ for (i in 1:length(unique(Tesis$.id))) {
     data2 = rbind.data.frame(data2,datax2)
   }
 }
+
+# Calculating Alpha
+
 X0= xm %*% zm
 Mo=  X0%*%solve(t(X0)%*%X0)%*%t(X0)
 IDEN = matrix(nrow = 60,ncol = 60,data = rep(0,60))
@@ -79,20 +89,3 @@ for (i in 1:length(unique(Tesis$.id))) {
     data3 <- rbind.data.frame(data3, datax3)
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -43,12 +43,12 @@ matrixs <- vector("list")
   for (i in 1:num_matrix) {
     inicio <- (i - 1) * n + 1
     fin <- min(i * n, num_row)
-    matriz <- datos[inicio:fin, c("x", "y")]
-    matriz = as.matrix(dist(cbind(matriz$x,matriz$y)))
-    matriz  = 1/matriz
-    diag(matriz) <- 0
-    matriz = matriz/sum(matriz)
-  matrixs[[i]] <- matriz
+    matrixs2 <- datos[inicio:fin, c("x", "y")]
+    matrixs2 = as.matrix(dist(cbind(matrixs2$x,matrixs2$y)))
+    matrixs2  = 1/matrixs2
+    diag(matrixs2) <- 0
+    matrixs2 = matrixs2/sum(matrixs2)
+  matrixs[[i]] <- matrixs2
   }
 matrixs
 }
@@ -89,5 +89,3 @@ for (i in 1:length(unique(Data1$.id))) {
     data3 <- rbind.data.frame(data3, datax3)
   }
 }
-
-

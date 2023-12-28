@@ -37,12 +37,12 @@ for (i in 1:length(unique(Data1$.id))) {
 # Generate matrix
 
 generate_matrix <- function(datos, n) {
-  num_filas <- nrow(datos)
+  num_row <- nrow(datos)
 matrixs <- vector("list")
-  num_matrices <- ceiling(num_filas / n)
-  for (i in 1:num_matrices) {
+  num_matrix <- ceiling(num_row / n)
+  for (i in 1:num_matrix) {
     inicio <- (i - 1) * n + 1
-    fin <- min(i * n, num_filas)
+    fin <- min(i * n, num_row)
     matriz <- datos[inicio:fin, c("x", "y")]
     matriz = as.matrix(dist(cbind(matriz$x,matriz$y)))
     matriz  = 1/matriz
@@ -89,4 +89,5 @@ for (i in 1:length(unique(Data1$.id))) {
     data3 <- rbind.data.frame(data3, datax3)
   }
 }
+
 
